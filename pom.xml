@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.8</version>
+    </parent>
+
+    <groupId>com.zxst</groupId>
+    <artifactId>zxstshoop</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>shoop_commons</module>
+        <module>shoop_customer</module>
+        <module>shoop_managent</module>
+        <module>shoop_service</module>
+        <module>clean_job</module>
+    </modules>
+   <properties>
+       <zxst.mybatis.spring.version>2.3.2</zxst.mybatis.spring.version>
+       <zxst.datasource.version>1.2.9</zxst.datasource.version>
+       <zxst.json.util.version>2.0.53</zxst.json.util.version>
+       <zxst.oss.version>3.8.0</zxst.oss.version>
+       <zxst.pay.version>4.40.186.ALL</zxst.pay.version>
+       <zxst.page.version>1.4.6</zxst.page.version>
+   </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${zxst.mybatis.spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${zxst.datasource.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${zxst.json.util.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${zxst.oss.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java -->
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-sdk-java</artifactId>
+                <version>${zxst.pay.version}</version>
+            </dependency>
+
+            <!-- springboot 整合mybatis　分页操作-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${zxst.page.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

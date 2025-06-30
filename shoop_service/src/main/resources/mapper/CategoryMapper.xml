@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxst.shoop.mapper.CategoryMapper">
+     <select id="showFirstMenu" resultType="com.zxst.shoop.entity.Category">
+         <!-- 如果存在pid就按照条件查询  否则查询表中所有的 -->
+         SELECT * FROM  t_product_category
+         <if test="pid!=null">
+             <where>
+                 parent_id=#{pid}
+             </where>
+         </if>
+     </select>
+</mapper>

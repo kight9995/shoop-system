@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxst.shoop.mapper.AddressMapper">
+
+     <select id="showAddress" resultType="com.zxst.shoop.entity.Address">
+         select *  from  t_address where uid = #{uid} order by is_default desc
+     </select>
+
+    <update id="updateByUid">
+        update t_address set is_default=0 where uid=#{uid}
+    </update>
+
+    <update id="updateByAid">
+        update t_address set is_default=1 where aid=#{aid}
+    </update>
+
+    <select id="getMaxCountByUid" resultType="java.lang.Integer">
+        select count(*) from t_address where uid=#{uid}
+    </select>
+
+    <insert id="saveAddress">
+         insert into t_address(uid,name,province_name,province_code,city_name,city_code,area_name,area_code,zip,address,phone,tel,tag,is_default,created_user,created_time,modified_user,modified_time)
+           values(#{uid},#{name},#{provinceName},#{provinceCode},#{cityName},#{cityCode},#{areaName},#{areaCode},#{zip},#{address},#{phone},#{tel},#{tag},#{isDefault},#{createdUser},#{createdTime},#{modifiedUser},#{modifiedTime})
+    </insert>
+
+    <select id="getAddressByAid" resultType="com.zxst.shoop.entity.Address">
+        select *  from  t_address where aid=#{aid}
+    </select>
+</mapper>
+
+
+
+
+

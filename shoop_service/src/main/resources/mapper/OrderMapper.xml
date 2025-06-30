@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxst.shoop.mapper.OrderMapper">
+
+
+
+    <insert id="saveOrder">
+        insert into t_order values(#{oid},#{uid},#{recvName},#{recvPhone},#{recvProvince},#{recvCity},#{recvArea},#{recvAddress},#{totalPrice},#{status},#{orderTime},#{payTime},#{createdUser},#{createdTime},#{modifiedUser},#{modifiedTime})
+    </insert>
+
+    <resultMap id="OrderMap1" type="com.zxst.shoop.entity.Order">
+        <id property="oid" column="oid"></id>
+        <collection  property="orderItemList" column="oid" select="com.zxst.shoop.mapper.OrderItemMapper.showItemByOid"></collection>
+    </resultMap>
+
+    <select id="showOrderInfoByUid" resultMap="OrderMap1">
+        select *  from  t_order where uid=#{uid}
+    </select>
+
+
+    <select id="findPage" resultType="com.zxst.shoop.entity.Order">
+        select *  from t_order
+        <if test="search!=null">
+             where  oid like concat('%',#{search},'%')
+             or  recv_address like concat('%',#{search},'%')
+        </if>
+    </select>
+
+    <delete id="deleteInfoByOid">
+        delete from t_order where oid=#{oid}
+    </delete>
+    <select id="getOrderByOid" resultType="com.zxst.shoop.entity.Order">
+        select *  from t_order where oid=#{oid}
+    </select>
+</mapper>

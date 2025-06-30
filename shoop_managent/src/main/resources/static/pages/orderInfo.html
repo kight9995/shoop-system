@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>电商后台管理</title>
+    <meta name="description" content="电商后台管理">
+    <meta name="keywords" content="电商后台管理">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>订单管理<small>订单信息管理</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>订单管理</el-breadcrumb-item>
+            <el-breadcrumb-item>订单信息管理</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <div class="filter-container">
+                <el-input placeholder="订单编号/收获地址" v-model="pagination.queryString" style="width: 200px;" class="filter-item"></el-input>
+                <el-button @click="findPage()" class="dalfBut">查询</el-button>
+            </div>
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="oid" label="订单编号" align="center"></el-table-column>
+                <el-table-column prop="recvName" label="收件人" width="80px" align="center"></el-table-column>
+                <el-table-column prop="recvAddress" label="收件地址" align="center"></el-table-column>
+                <el-table-column prop="totalPrice" label="支付金额" width="80px" align="center"></el-table-column>
+                <el-table-column label="订单状态" align="center" width="80px">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.status == '1' ? '未发货' : '已发货'}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">详情</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+                        <el-button v-if="scope.row.status ==1" size="mini" type="danger" @click="changeOrder(scope.row)">发货</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        class="pagiantion"
+                        @current-change="handleCurrentChange"
+                        :current-page="pagination.currentPage"
+                        :page-size="pagination.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="pagination.total">
+                </el-pagination>
+            </div>
+            <!-- 订单详情 -->
+            <div class="add-form">
+                <el-dialog title="订单详情" :visible.sync="dialogFormVisible">
+                    <el-form :model="formData" label-position="right" label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="订单编号">
+                                    <el-input v-model="formData.oid" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="收件人">
+                                    <el-input v-model="formData.recvName" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="电话">
+                                    <el-input v-model="formData.recvPhone" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="支付金额">
+                                    <el-input v-model="formData.totalPrice" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="省份">
+                                    <el-input v-model="formData.recvProvince" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="城市">
+                                    <el-input v-model="formData.recvCity" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="区域">
+                                    <el-input v-model="formData.recvArea" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="详细地址">
+                                    <el-input v-model="formData.recvAddress" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="下单时间">
+                                    <el-input v-model="formData.orderTime" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="支付时间">
+                                    <el-input v-model="formData.payTime" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="订单用户">
+                                    <el-input v-model="username" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="联系方式">
+                                    <el-input v-model="phone" readonly></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">关 闭</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../js/vue.js"></script>
+<script src="../plugins/elementui/index.js"></script>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script type="text/javascript">
+    var vue = new Vue({
+        el:'#app',
+        data:{
+            dialogFormVisible: false,
+            dataList:[],
+            pagination:{
+                currentPage: 1,  //当前页
+                pageSize: 2,     //每页展示的条数
+                total: 0,       //总条数据
+                queryString:'',  //查询条件
+                pageSizes: [2,4,6,8,10]
+            },
+            formData: {},
+            username:'',
+            phone:'',
+
+        },
+        created(){
+            //查询数据
+            this.findPage();
+        },
+        methods:{
+            findPage(){
+                //json结构传值
+                var param= {
+                    currentPage: this.pagination.currentPage,
+                    pageSize: this.pagination.pageSize,
+                    queryString: this.pagination.queryString
+                }
+                axios.post('/orders/findPage',param).then((resp)=>{
+                    this.pagination.total =  resp.data.total;
+                    this.dataList = resp.data.rows;
+                    console.log(this.dataList)
+                }).catch((error)=>{
+                    this.$message.error('分页查询失败');
+                });
+            },
+            //切换页码
+            handleCurrentChange(currentPage){
+                this.pagination.currentPage = currentPage;
+                this.findPage();
+            },
+
+            handleDelete(row){
+                this.$confirm('此操作将悠久删除该数据, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/orders/deleteOrderInfo?oid='+row.oid)
+                        .then((resp)=>{
+                            if (resp.data.code == 200){
+                                this.$message({
+                                    message: '更新状态成功',
+                                    type: 'success'
+                                });
+                            }
+                            this.findPage();
+                        }).catch((error)=>{
+                        this.$message.error('删除数据失败');
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消操作'
+                    });
+                });
+            },
+            //发货
+            changeOrder(row){},
+
+            //展示详情
+            handleUpdate(row){
+                this.formData = {};
+                this.dialogFormVisible = true;
+                var oid =  row.oid;
+                axios.post('/orders/showOrderDetail?oid='+oid).then((resp)=>{
+                    this.formData = resp.data.data;
+                    console.log(this.formData);
+                    this.username = resp.data.data.user.username;
+                    this.phone = resp.data.data.user.phone;
+                });
+            }
+        }
+    });
+
+</script>
+</html>

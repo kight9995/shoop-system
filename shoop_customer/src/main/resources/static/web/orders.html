@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!--edge浏览器H5兼容设置-->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!--360浏览器H5兼容设置-->
+		<meta name="renderer" content="webkit" />
+		<title>电脑商城</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--导入核心文件-->
+		<script src="../bootstrap3/js/holder.js"></script>
+		<link href="../bootstrap3/css/bootstrap.css" rel="stylesheet" type="text/css">
+		<script src="../bootstrap3/jquery-1.9.1.min.js"></script>
+		<script src="../bootstrap3/js/bootstrap.js"></script>
+		<!-- 字体图标 -->
+		<link rel="stylesheet" href="../bootstrap3/font-awesome-4.7.0/css/font-awesome.css" />
+		<link rel="stylesheet" type="text/css" href="../css/layout.css" />
+		<link rel="stylesheet" type="text/css" href="../css/top.css" />
+		<link rel="stylesheet" type="text/css" href="../css/footer.css" />
+		<link rel="stylesheet" type="text/css" href="../css/order.css" />
+	</head>
+
+	<body>
+		<!--头部-->
+		<header class="header">
+			<!--电脑商城logo-->
+			<div class="row">
+				<div class="col-md-3">
+					<a href="index.html">
+						<img src="../images/index/stumalllogo.png" />
+					</a>
+				</div>
+				<!--快捷选项-->
+				<div class="col-md-9 top-item">
+					<ul class="list-inline pull-right">
+						<li><a href="favorites.html"><span class="fa fa-heart"></span>&nbsp;收藏</a></li>
+						<li class="li-split">|</li>
+						<li><a href="orders.html"><span class="fa fa-file-text"></span>&nbsp;订单</a></li>
+						<li class="li-split">|</li>
+						<li><a href="cart.html"><span class="fa fa-cart-plus"></span>&nbsp;购物车</a></li>
+						<li class="li-split">|</li>
+						<li>
+							<!--下列列表按钮 ：管理-->
+							<div class="btn-group">
+								<button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+									<span id="top-dropdown-btn"><span class="fa fa-gears"></span>&nbsp;管理 <span class="caret"></span></span>
+								</button>
+								<ul class="dropdown-menu top-dropdown-ul" role="menu">
+									<li><a href="password.html">修改密码</a></li>
+									<li><a href="userdata.html">个人资料</a></li>
+									<li><a href="upload.html">上传头像</a></li>
+									<li><a href="address.html">收货管理	</a></li>
+								</ul>
+							</div>
+						</li>
+						<li class="li-split">|</li>
+						<li><a href="login.html"><span class="fa fa-user"></span>&nbsp;登录</a></li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<!--导航 -->
+		<!--分割导航和顶部-->
+		<div class="row top-nav">
+			<div class="col-md-6">
+				<ul class="nav nav-pills">
+					<li>
+						<a href="#"></a>
+					</li>
+					<li class="active"><a href="index.html"><span class="fa fa-home"></span></a></li>
+					<li><a href="#">秒杀</a></li>
+					<li><a href="#">优惠券</a></li>
+					<li><a href="#">电脑VIP</a></li>
+					<li><a href="#">外卖</a></li>
+					<li><a href="#">超市</a></li>
+				</ul>
+			</div>
+			<div class="col-md-6">
+				<form action="search.html" class="form-inline pull-right" role="form">
+					<div class="form-group">
+						<input type="text" class="form-control" id="search" name="search" placeholder="请输入商品名称进行搜索">
+					</div>
+					<button type="submit" class="btn btn-default btn-sm"><span class="fa fa-search"></span></button>
+				</form>
+			</div>
+		</div>
+		<!--头部结束-->
+		<!--导航结束-->
+		<div class="container">
+			<div class="col-md-2">
+				<!--左侧导航开始-->
+				<div class="panel-group" id="accordion">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<!--主选项：我的订单-->
+							<p class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">我的订单</a>
+							</p>
+						</div>
+						<div id="collapseOne" class="panel-collapse collapse in">
+							<div class="panel-body">
+								<div><a href="orders.html"><b>全部订单</b></a></div>
+								<div><a href="orders.html">待付款</a></div>
+								<div><a href="orders.html">待收货</a></div>
+								<div><a href="orders.html">待评价</a></div>
+								<div><a href="orders.html">退货退款</a></div>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<!--主选项：资料修改-->
+							<p class="panel-title">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">资料修改</a>
+							</p>
+						</div>
+						<div id="collapseTwo" class="panel-collapse collapse">
+							<div class="panel-body">
+								<div><a href="password.html"><b>修改密码</b></a></div>
+								<div><a href="userdata.html">个人资料</a></div>
+								<div><a href="upload.html">上传头像</a></div>
+								<div><a href="address.html">收货管理</a></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--左侧导航结束-->
+			<div  id="orderView" class="col-md-10">
+			</div>
+		</div>
+		<!--页脚开始-->
+		<div class="clearfix"></div>
+		<footer class="footer">
+			<!-- 品质保障，私人定制等-->
+			<div class="text-center rights container">
+				<div class="col-md-offset-2 col-md-2">
+					<span class="fa fa-thumbs-o-up"></span>
+					<p>品质保障</p>
+				</div>
+				<div class="col-md-2">
+					<span class="fa fa-address-card-o"></span>
+					<p>私人订制</p>
+				</div>
+				<div class="col-md-2">
+					<span class="fa fa-graduation-cap"></span>
+					<p>学生特供</p>
+				</div>
+				<div class="col-md-2">
+					<span class="fa fa-bitcoin"></span>
+					<p>专属特权</p>
+				</div>
+			</div>
+			<!--联系我们、下载客户端等-->
+			<div class="container beforeBottom">
+				<div class="col-md-offset-1 col-md-3">
+					<div><img src="../images/index/stumalllogo.png" alt="" class="footLogo" /></div>
+					<div><img src="../images/index/footerFont.png" alt="" /></div>
+				</div>
+				<div class="col-md-4 callus text-center">
+					<div class="col-md-4">
+						<ul>
+							<li>
+								<a href="#">
+									<p>买家帮助</p>
+								</a>
+							</li>
+							<li><a href="#">新手指南</a></li>
+							<li><a href="#">服务保障</a></li>
+							<li><a href="#">常见问题</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<ul>
+							<li>
+								<a href="#">
+									<p>商家帮助</p>
+								</a>
+							</li>
+							<li><a href="#">商家入驻</a></li>
+							<li><a href="#">商家后台</a></li>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<ul>
+							<li>
+								<a href="#">
+									<p>关于我们</p>
+								</a>
+							</li>
+							<li><a href="#">关于圆心</a></li>
+							<li><a href="#">联系我们</a></li>
+							<li>
+								<span class="fa fa-wechat"></span>
+								<span class="fa fa-weibo"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="col-md-5">
+						<p>电脑商城客户端</p>
+						<img src="../images/index/ios.png" class="lf">
+						<img src="../images/index/android.png" alt="" class="lf" />
+					</div>
+					<div class="col-md-6">
+						<img src="../images/index/erweima.png">
+					</div>
+				</div>
+			</div>
+			<!-- 页面底部-备案号 #footer -->
+			<div class="col-md-12 text-center bottom">
+				Copyright © 2022 dnsc.cn All Rights Reserved 京ICP备08963888号-45 <a target="_blank" href="http://www.dnsc.cn/">圆心科技集团有限公司</a> 版权所有
+			</div>
+		</footer>
+		<!--页脚结束-->
+		<script>
+			// 页面加载完成后调用showOrders函数
+			$(document).ready(function() {
+				showOrders();
+			});
+
+			// 展示订单信息
+			function showOrders() {
+				$.ajax({
+					url: '/orders/showOrdersInfo',
+					type: 'get',
+					dataType: 'json',
+					success: function(resp) {
+						console.log('API Response:', resp);
+						
+						// 检查响应状态码
+						if (resp.code === 401) {
+							// 未登录，跳转到登录页
+							alert('请先登录');
+							window.location.href = 'login.html';
+							return;
+						} else if (resp.code !== 200) {
+							// 其他错误
+							alert('加载订单数据失败: ' + (resp.message || '未知错误'));
+							return;
+						}
+						
+						// 清空现有内容
+						$("#orderView").empty();
+						
+						// 检查是否有订单数据
+						var orders = resp.data;
+						if (!orders || orders.length === 0) {
+							$("#orderView").html('<div class="alert alert-info">您还没有任何订单</div>');
+							return;
+						}
+						
+						// 遍历订单数据
+						$(orders).each(function(index, item) {
+							var orderStatus = '';
+							switch(item.status) {
+								case 0: orderStatus = '待付款'; break;
+								case 1: orderStatus = '已付款'; break;
+								case 2: orderStatus = '已发货'; break;
+								case 3: orderStatus = '已完成'; break;
+								case 4: orderStatus = '已取消'; break;
+								default: orderStatus = '未知状态';
+							}
+							
+							var div = "<div class='panel panel-default'>" +
+								"<div class='panel-heading'>" +
+								"<p class='panel-title'>" +
+								"订单号: " + (item.oid || '') + " | 下单时间：" + (item.orderTime || '') + " | 收货人：" + (item.recvName || '') + " | 状态：<span class='text-primary'>" + orderStatus + "</span>" +
+								"</p>" +
+								"</div>" +
+								"<div class='panel-body'>" +
+								"<table class='orders-table table table-bordered' width='100%'>" +
+								"<thead>" +
+								"<tr>" +
+								"<th width='15%'></th>" +
+								"<th width='30%'>商品</th>" +
+								"<th width='8%'>单价</th>" +
+								"<th width='8%'>数量</th>" +
+								"<th width='9%'>小计</th>" +
+								"<th width='10%'>售后</th>" +
+								"<th width='10%'>状态</th>" +
+								"<th width='10%'>操作</th>" +
+								"</tr>" +
+								"</thead>" +
+								"<tbody id='" + (item.oid || '') + "' class='orders-body'>" +
+								"</tbody>" +
+								"</table>" +
+								"<div class='text-right' style='margin-top: 10px;'>" +
+								"<strong>订单总金额：<span class='text-danger' style='font-size: 18px;'>¥" + (item.totalPrice || '0.00') + "</span></strong>" +
+								"</div>" +
+								"</div>" +
+								"</div>";
+							
+							$("#orderView").append(div);
+
+							// 添加订单项
+							if (item.orderItemList && item.orderItemList.length > 0) {
+								$(item.orderItemList).each(function(index1, item1) {
+									var unitPrice = item1.num > 0 ? (item1.price / item1.num).toFixed(2) : '0.00';
+									var tr = "<tr>" +
+										"<td><img src='" + (item1.image || '../images/default-product.png') + "' class='img-responsive' style='max-width: 80px;' onerror=\"this.src='../images/default-product.png'\" /></td>" +
+										"<td>" + (item1.title || '未知商品') + "</td>" +
+										"<td>¥" + unitPrice + "</td>" +
+										"<td>" + (item1.num || 0) + "件</td>" +
+										"<td>¥" + (item1.price || '0.00') + "</td>" +
+										"<td><a href='#' class='text-muted'>申请售后</a></td>" +
+										"<td>" + orderStatus + "<br/><a href='orderInfo.html?oid=" + (item.oid || '') + "' class='text-primary'>订单详情</a></td>" +
+										"<td>";
+									
+								// 根据订单状态显示不同操作按钮
+									if (item.status === 0) {
+										tr += "<a href='payment.html?oid=" + (item.oid || '') + "' class='btn btn-danger btn-xs'>去支付</a>";
+									} else if (item.status === 2) {
+										tr += "<button class='btn btn-success btn-xs confirm-receipt' data-oid='" + (item.oid || '') + "'>确认收货</button>";
+									}
+									
+									tr += "</td></tr>";
+									$("#" + item.oid).append(tr);
+								});
+							} else {
+								$("#" + item.oid).append("<tr><td colspan='8' class='text-center'>暂无商品信息</td></tr>");
+							}
+						});
+						
+						// 绑定确认收货按钮事件
+						$(".confirm-receipt").click(function() {
+							var oid = $(this).data('oid');
+							if (confirm('确认已收到商品？')) {
+								$.post('/orders/confirmReceipt', {oid: oid}, function(resp) {
+									if (resp.code === 200) {
+										alert('确认收货成功');
+										showOrders(); // 刷新订单列表
+									} else {
+										alert('操作失败: ' + (resp.message || '未知错误'));
+									}
+								}, 'json').fail(function() {
+									alert('网络错误，请稍后重试');
+								});
+							}
+						});
+					},
+					error: function(xhr, status, error) {
+						console.error("Error fetching orders:", error);
+						var errorMsg = "加载订单数据失败，请刷新页面重试";
+						if (xhr.responseJSON && xhr.responseJSON.message) {
+							errorMsg += ": " + xhr.responseJSON.message;
+						}
+						$("#orderView").html('<div class="alert alert-danger">' + errorMsg + '</div>');
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

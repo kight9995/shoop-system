@@ -1,0 +1,42 @@
+#服务端口
+server:
+  port: 8087
+#数据源
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Wzh20031015
+    url: jdbc:mysql://localhost:3306/strore?character=utf-8&serverTimezone=UTC
+  redis:   #redis配置
+    host: 127.0.0.1
+    port: 6379
+    password: Wzh20031015
+mybatis: #整合mybatis配置
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.zxst.shoop.entity
+
+alinfo:
+  oss-endpoint: oss-cn-qingdao.aliyuncs.com
+  oss-accesskeyid: LTAI5tEJ53Gsf7wkoN6toZpn
+  oss-accesskeysecret: Cc5GzpLxKJlave4uQqFR7YwSuD3dHD
+  oss-bucketname: zxst-shoop-wzh
+#每个用户最多10个地址
+user:
+  address:
+    max-count: 10
+#沙箱支付环境配置信息
+alipay:
+  appId: 2021000149619773
+  privateKey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCQwbwE+Uvq9rUZIB4qu8iDXU4UOFBooxsIH1/UBZOxKvT8SVXUf1dzTK+76/IiyhYGcx2Tb/UU/BrWCcAoiQoyfB4np2CQ3BnuH/hnHLcvW6PHFVtieqbQhsZIeAb97wvOLRuSdR9JXA9ZrQ7R7A2sCzrA27T769IOJ+aI//u+Ey+38iUtRB1BWR8I69JvNbFJB73MrKTf7XmfBORHWiHu3T3q58+wdnKuVqr/A3ir76vXCaWot2mfjW8h+bu5+/oFgjs3k1XFhAXHDMsO+lkH7bgOuVcTQk6lD6O3B/qOsWbDQvqXVrj6jePFsyxUA4HM5OvjLdp2beQ0cknAlLP3AgMBAAECggEAL2OtOPegOfDAQtR368eEEjVmjUoOUOMsw1D6H0AgJL0KbNlZRvLVX0K4uU25/FeqNDxVb2IUmuUZp/6TMPIEK5jkiljKTUIxHvrKaH9HHTLkABXmz+uVVuj4WtsodtNeSwYLY7wCHRMNV29HTcP4id03Q9Hpgxulrcq0Nx+Oe5/t3d2cnt/eE5wtb/dQewx4arJb7dPv2C8llnY+MXiBwfe4O4BWp4XaAJAzBGkEJ3nThgJFyClGUhTtU40NmHyoWJWUDPlDjntrLwLob/qrp7tbX1ou4ZuZEzv8T454qRxZzLvUyhUDjcGgU0z8/MlwzmYuigcqMGtMTcEdL2s80QKBgQDqZUTw5gMMd6ekFgbIh3x8aoiBIsQu3GzTWbevicq12C5nIeEmusawqUu7KBipYtMt+kZNX4bce+T0MBxwA2ganZR28MIOcNRfLRGcmY1nKq2JqurTD55ILRS5m3XXj0jDSZj+vBX6A+KD4+IPTVKia2X827eAWzYDvHrXmFOHXwKBgQCeGV+nFO5p3blXxY5lPWtYUSRR6YrxOLgZmQGY7K7fQxaGd/o2js2hFSLy7z7+rGW0w2LgpqbmCj14OwPDOqY86e2jypD7ozXpv9cU/D5OoWBD1cYpGGJ5lAT9j+8PZgLug6fLRUVI0O0wsS2woIZBqo4o3F4dl6mmurJup6KSaQKBgQDP5oz0ov9XQpZWCxdvLAU1kYSMDds2uVppSC2NrEk5a4sU/M7ofEgZj7/VPCZLr5UiNde/bxh+XgHguP+wNsVSvixeJwPorRkhZic14Fi0hf0wm4H3POYmnJ3CV2p5jOR8Gr5ySz+u5101oJ309p9x4pKuae/kEILjY30N11VXPwKBgQCca4xY2fu8oJPFBIALKIZxXe6qYH+IhE6ZfOm4rMujt1Os/T2BBy7ppejrJMxV2qnR+9JzZE8SoKUKtJDXcsqQz/2/pSZm4abwu06Iw7y9vSpqUzJ47FhZ45pAaUzkFlDmPTohgkq3bYaPO21yKJBMnfuC7+zqKGjAvkzV8GOHqQKBgH3++rNxUElapddim/Xyw2IzsORMuQwxh1MoZBOyyLr1WnVFsTzxIqzIqeRFWlLOrXyUZrz5ug+HHCtEPKxiSNYvQwtS/UIFZL/aBo0KHByGXql1gMhfSIlnufnmLDN1QINkQqvUEKQ+/YvP47Nj73YF5Ywr4EqZeDJaOEKMYUr8
+  alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtIsu0Qpp+jg7wTntzWS4gZ2J1B5LZdauAQAAd0Vmvh1TUf655nP1oz0M8gz7dVLt+SZRVWtSorIYkzgZWYPw87D41etCmynSPUYRoIIeI3AYS1LjWRFnOYlFflb2jDpmUZkwkyMbvtQ6iOl+Izp5AmAlAfGqJLJluabVPVrGi4qN4Fx/FieUDviNnX72rPDrUwLw4MaqZO58fg/VOQ50ckB5seLjKsYzOTb+1UEl3DPV4RzNWxx0r/SPQm13GCpMEIjSqQXz13sRVTjG0llcDNZHkipkZQHuqQ8G+kPtDD9jakz/+9yZy7bQMhs0ZODkAKDCZ/4gbwttqfXoIxmTAQIDAQAB
+  notifyUrl: http://nb9a2648.natappfree.cc/alipay/notify
+  returnUrl: http://localhost:8087/web/paySuccess.html
+  charset: utf-8
+  gatewayUrl: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+  signType: RSA2
+  format: json
+

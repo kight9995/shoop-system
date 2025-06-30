@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>电商后台管理</title>
+    <meta name="description" content="电商后台管理">
+    <meta name="keywords" content="电商后台管理">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入组件库 -->
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../plugins/elementui/index.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+        .datatable {
+            position: relative;
+            box-sizing: border-box;
+            -webkit-box-flex: 1;
+            width: 100%;
+            max-width: 100%;
+            font-size: 14px;
+            color: rgb(96, 98, 102);
+            overflow: hidden;
+            flex: 1 1 0%;
+        }
+        .datatable td, .datatable th {
+            padding: 12px 0;
+            min-width: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+            position: relative;
+            text-align: left;
+        }
+    </style>
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>商品管理<small>商品信息管理</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>商品管理</el-breadcrumb-item>
+            <el-breadcrumb-item>商品信息管理</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <div class="filter-container">
+                <el-input placeholder="标题信息" v-model="pagination.queryString" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"></el-input>
+                <el-button @click="findPage()" class="dalfBut">查询</el-button>
+                <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
+            </div>
+
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="id" label="编号" align="center"></el-table-column>
+                <el-table-column prop="title" label="标题" align="center"></el-table-column>
+                <el-table-column label="状态" align="center">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.status == '1' ? '在售' : '下架'}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="price" label="价格" align="center"></el-table-column>
+                <el-table-column prop="num" label="库存" align="center"></el-table-column>
+                <el-table-column  label="图片" align="center">
+                    <template slot-scope="scope">
+                         <img :src="scope.row.image+'collect.png'" width="50px" height="40px">
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button v-if="scope.row.status == 1" size="mini" type="danger" @click="downProduct(scope.row)">下架商品</el-button>
+                        <el-button size="mini" v-if="scope.row.status == 0" type="success" @click="downProduct(scope.row)">上架商品</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        class="pagiantion"
+                        @current-change="handleCurrentChange"
+                        :current-page="pagination.currentPage"
+                        :page-size="pagination.pageSize"
+                        :page-sizes="pagination.pageSizes"
+                        layout="total, prev, pager, next, jumper"
+                        :total="pagination.total">
+                </el-pagination>
+            </div>
+
+            <!-- 新增标签弹层 -->
+            <div class="add-form">
+                <el-dialog title="添加商品" :visible.sync="dialogFormVisible">
+                    <template>
+                        <el-tabs v-model="activeName" type="card">
+                                <el-form label-position="right" label-width="100px">
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="商品系列">
+                                                <el-input v-model="formData.itemType"/>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="商品标题">
+                                                <el-input v-model="formData.title"/>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="商品价格">
+                                                <el-input v-model="formData.price"/>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="数量">
+                                                <el-input v-model="formData.num"/>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="一级类别" >
+                                                <el-select @change="showSecond(formData.first)" v-model="formData.first">
+                                                    <el-option v-for="item in categorys" :label="item.name" :value="item.id"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="二级类别">
+                                                <el-select v-model="formData.categoryId">
+                                                    <el-option v-for="item1 in secondCategory" :label="item1.name" :value="item1.id"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row :span="12">
+                                        <el-col :span="12">
+                                            <el-form-item label="商品优先级">
+                                                <el-select v-model="formData.priority">
+                                                    <el-option label="低" value="100"></el-option>
+                                                    <el-option label="中" value="50"></el-option>
+                                                    <el-option label="高" value="10"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="是否上架">
+                                                <el-select v-model="formData.status">
+                                                    <el-option label="立刻上架" value="1"></el-option>
+                                                    <el-option label="暂时保留" value="0"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="上传图片">
+                                                <el-upload
+                                                        class="avatar-uploader"
+                                                        action="/uploadpic/saveProductPic"
+                                                        :auto-upload="autoUpload"
+                                                        name="imgFile"
+                                                        :show-file-list="false"
+                                                        :on-success="handleAvatarSuccess"
+                                                        :before-upload="beforeAvatarUpload">
+                                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                                </el-upload>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="商品卖点">
+                                                <el-input v-model="formData.sellPoint" type="textarea"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+
+                                </el-form>
+                        </el-tabs>
+                    </template>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取消</el-button>
+                        <el-button type="primary" @click="handleAdd()">确定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+       var vue = new Vue({
+           el:'#app',
+           data:{
+               dataList:[],
+               pagination:{
+                   currentPage: 1,  //当前页
+                   pageSize: 5,     //每页展示的条数
+                   total: 0,       //总条数据
+                   queryString:'',  //查询条件
+                   pageSizes: [5,10,15,20,25]
+               },
+               formData:{},
+               dialogFormVisible : false,
+               categorys:[],   //一级类别集合
+               secondCategory:[], //二级类别的集合
+               imageUrl:null,
+               autoUpload: true,
+               activeName: 'first'
+
+           },
+           created(){
+              this.findPage();
+           },
+           methods:{
+               findPage(){
+                   //json结构传值
+                   var param={
+                       currentPage: this.pagination.currentPage,
+                       pageSize: this.pagination.pageSize,
+                       queryString: this.pagination.queryString
+                   }
+                   axios.post('/product/findPage',param).then((resp)=>{
+                       this.pagination.total =  resp.data.total;
+                       this.dataList = resp.data.rows;
+                   }).catch((error)=>{
+                       alert("=====");
+                   });
+               },
+               //切换页码
+               handleCurrentChange(currentPage){
+                   this.pagination.currentPage = currentPage;
+                   this.findPage();
+               },
+               downProduct(row){
+                   this.$confirm('此操作将修改商品状态, 是否继续?', '提示', {
+                       confirmButtonText: '确定',
+                       cancelButtonText: '取消',
+                       type: 'warning'
+                   }).then(() => {
+                       var id = row.id;
+                       console.log(id)
+                       axios.post('/product/downProduct?id='+id).then((resp)=>{
+                           if(resp.data.code==200){
+                               this.$message({
+                                   message: '更新状态成功',
+                                   type: 'success'
+                               });
+                           }else{
+                               this.$message.error('更新状态失败');
+                           }
+                           //刷新表格
+                           this.findPage();
+                       });
+                   }).catch(() => {
+                       this.$message({
+                           type: 'info',
+                           message: '取消操作'
+                       });
+                   });
+               },
+               //弹出添加商品窗口
+               handleCreate(){
+                   this.dialogFormVisible = true;
+                   this.formData = {};
+                   this.imageUrl = '',
+                   axios.get('/category/showCategory?pid=0').then((resp)=>{
+                       this.categorys = resp.data;
+                   });
+               },
+               showSecond(val){
+                   this.secondCategory = [];
+                   axios.get('/category/showCategory?pid='+val).then((resp)=>{
+                       this.secondCategory = resp.data;
+                   });
+               },
+               //上传成功后自动回调的函数
+               handleAvatarSuccess(response, file) {
+                   console.log(response);
+                   this.imageUrl=response.data;
+                   //给后台提供套餐配套的图片名称
+                   this.formData.image = response.data;
+               },
+               beforeAvatarUpload(){
+
+               },
+               handleAdd(){
+                   axios.post('/product/saveProduct',this.formData).then((resp)=>{
+                       if(resp.data.code==200){
+                           this.$message({
+                               message: '添加成功',
+                               type: 'success'
+                           });
+                       }else{
+                           this.$message.error('添加失败');
+                       }
+                       //关闭窗口
+                       this.dialogFormVisible = false;
+                       //刷新表格
+                       this.findPage();
+                   });
+               }
+           }
+       });
+</script>
+</html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxst.shoop.mapper.CartMapper">
+
+    <select id="getCartByPidAndUid" resultType="com.zxst.shoop.entity.Cart">
+        select *  from  t_cart where pid=#{pid} and uid=#{uid}
+    </select>
+
+    <select id="getCartByPk" resultType="com.zxst.shoop.entity.Cart">
+        select *  from  t_cart where cid=#{cid}
+    </select>
+
+    <insert id="saveCart">
+        insert into t_cart(pid,uid,num,price,created_time,created_user,modified_user,modified_time)
+        values(#{pid},#{uid},#{num},#{price},#{createdTime},#{createdUser},#{modifiedUser},#{modifiedTime})
+    </insert>
+
+    <update id="updateProNum">
+        update t_cart set num=#{num},modified_time=#{modifiedTime} where cid=#{cid}
+    </update>
+
+    <select id="showCarInfo" resultType="com.zxst.shoop.vo.CartVo">
+        SELECT c.cid,c.pid,c.uid,c.num,p.price,p.image,p.title  from t_cart c left join t_product p
+        on c.pid = p.id where c.uid=#{uid}  ORDER BY c.modified_time desc;
+    </select>
+
+    <select id="getTotalNum" resultType="com.zxst.shoop.entity.Cart">
+        select *  from  t_cart
+    </select>
+
+    <delete id="batchDelete">
+         delete from t_cart where cid in
+         <!-- 传递的参数是数组类型 我们遍历集合的名称 array -->
+         <foreach collection="array" item="id" open="(" close=")" separator=",">
+               #{id}
+         </foreach>
+    </delete>
+
+    <select id="getCarInfoByIds" resultType="com.zxst.shoop.vo.CartVo">
+        SELECT c.cid,c.pid,c.uid,c.num,p.price,p.image,p.title  from t_cart c left join t_product p
+        on c.pid = p.id where  c.cid in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        ORDER BY c.modified_time desc;
+    </select>
+</mapper>

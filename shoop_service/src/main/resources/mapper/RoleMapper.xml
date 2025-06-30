@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxst.shoop.mapper.RoleMapper">
+
+    <select id="findPage" resultType="com.zxst.shoop.entity.Role">
+        select *  from t_role
+        <if test="search!=null">
+            where rolename like concat('%',#{search},'%')
+        </if>
+    </select>
+
+    <insert id="saveRole" useGeneratedKeys="true" keyProperty="roleid">
+        insert into t_role(rolename,keyword,description,status) values(#{rolename},#{keyword},#{description},#{status})
+    </insert>
+
+    <select id="getRoleByPk" resultType="com.zxst.shoop.entity.Role">
+        select *  from  t_role where roleid=#{roleid}
+    </select>
+
+    <update id="updateById" >
+        update t_role
+        <set>
+            <if test="rolename!=null">
+                rolename=#{rolename},
+            </if>
+            <if test="keyword!=null">
+                 keyword = #{keyword},
+            </if>
+            <if test="description!=null">
+                description = #{description},
+            </if>
+            <if test="status!=null">
+                status = #{status},
+            </if>
+        </set>
+        <where>
+            roleid=#{roleid}
+        </where>
+    </update>
+</mapper>

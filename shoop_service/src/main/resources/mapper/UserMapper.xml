@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxst.shoop.mapper.UserMapper">
+
+    <select id="getUserByUserName" resultType="com.zxst.shoop.entity.User">
+         select *  from  t_user where username=#{uname}
+    </select>
+
+    <insert id="register" parameterType="com.zxst.shoop.entity.User">
+        insert into t_user(username,password,salt,phone,email,gender,avatar,is_delete,created_user,created_time,modified_user,modified_time)
+        values(#{username},#{password},#{salt},#{phone},#{email},#{gender},#{avatar},#{isDelete},#{createdUser},#{createdTime},#{modifiedUser},#{modifiedTime})
+    </insert>
+
+    <select id="findUserById" resultType="com.zxst.shoop.entity.User">
+        select *  from t_user where uid = #{uid}
+    </select>
+
+    <update id="updateInfo" parameterType="com.zxst.shoop.entity.User">
+         update t_user
+         <set>
+             <if test="password!=null">
+                 password = #{password},
+             </if>
+             <if test="phone != null">
+                 phone = #{phone},
+             </if>
+             <if test="email!=null">
+                 email = #{email},
+             </if>
+             <if test="gender!=null">
+                 gender = #{gender},
+             </if>
+             <if test="avatar!=null">
+                 avatar = #{avatar},
+             </if>
+             <if test="isDelete!=null">
+                 is_delete = #{isDelete},
+             </if>
+             <if test="modifiedUser!=null">
+                 modified_user = #{modifiedUser},
+             </if>
+             <if test="modifiedTime!=null">
+                 modified_time = #{modifiedTime}
+             </if>
+         </set>
+        <where>
+            uid = #{uid}
+        </where>
+    </update>
+
+    <select id="findPage" resultType="com.zxst.shoop.entity.User">
+        select *  from t_user
+        <if test="search!=null">
+            where username like concat('%',#{search},'%')
+            or email like concat('%',#{search},'%')
+        </if>
+    </select>
+
+     <select id="getCtByDate" resultType="java.lang.Integer">
+          select count(*) from t_user where created_time between #{start}  and  #{end}
+     </select>
+
+</mapper>

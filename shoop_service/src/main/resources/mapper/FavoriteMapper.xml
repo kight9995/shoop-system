@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxst.shoop.mapper.FavoriteMapper">
+
+    <insert id="addFavoretise" useGeneratedKeys="true" keyProperty="fid">
+        insert into t_favorites(pid,uid,title,price,image,create_user,create_time)
+        values(#{pid},#{uid},#{title},#{price},#{image},#{createUser},#{createTime})
+        on duplicate key update title=#{title}, price=#{price}, image=#{image}
+    </insert>
+
+    <delete id="dropFavoretise">
+        delete from t_favorites where fid=#{fid}
+    </delete>
+
+    <delete id="dropFavoretiseByUidAndPid">
+        delete from t_favorites where uid=#{uid} and pid=#{pid}
+    </delete>
+
+    <select id="findByUid" resultType="com.zxst.shoop.entity.Favorite">
+        select * from t_favorites where uid=#{uid}
+    </select>
+
+    <select id="findByUidAndPid" resultType="com.zxst.shoop.entity.Favorite">
+        select * from t_favorites where uid=#{uid} and pid=#{pid}
+    </select>
+</mapper>

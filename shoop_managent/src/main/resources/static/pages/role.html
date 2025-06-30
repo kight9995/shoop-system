@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>电商后台管理</title>
+    <meta name="description" content="电商后台管理">
+    <meta name="keywords" content="电商后台管理">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- 引入组件库 -->
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script src="../js/vue.js"></script>
+    <script src="../plugins/elementui/index.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+        .datatable {
+            position: relative;
+            box-sizing: border-box;
+            -webkit-box-flex: 1;
+            width: 100%;
+            max-width: 100%;
+            font-size: 14px;
+            color: rgb(96, 98, 102);
+            overflow: hidden;
+            flex: 1 1 0%;
+        }
+        .datatable td, .datatable th {
+            padding: 12px 0;
+            min-width: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+            position: relative;
+            text-align: left;
+        }
+    </style>
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>角色管理<small>角色信息管理</small></h1>
+        <el-breadcrumb separator-class="el-icon-arrow-right" class="breadcrumb">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item>角色管理</el-breadcrumb-item>
+            <el-breadcrumb-item>角色信息管理</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <div class="filter-container">
+                <el-input placeholder="角色名称" v-model="pagination.queryString" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"></el-input>
+                <el-button @click="findPage()" class="dalfBut">查询</el-button>
+                <el-button type="primary" class="butT" @click="handleCreate()">创建新角色</el-button>
+            </div>
+            <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
+                <el-table-column type="index" align="center" label="序号"></el-table-column>
+                <el-table-column prop="roleid" label="角色编号" align="center"></el-table-column>
+                <el-table-column prop="rolename" label="角色名称" align="center"></el-table-column>
+                <el-table-column label="角色状态" align="center">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.status == '1' ? '启用' : '禁用'}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
+                <el-table-column prop="description" label="角色描述" align="center"></el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                        <el-button size="mini" type="danger" @click="lockRole(scope.row)">禁用角色</el-button>
+                        <el-button size="mini" type="success" @click="editRole(scope.row)">编辑角色</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        class="pagiantion"
+                        @current-change="handleCurrentChange"
+                        :current-page="pagination.currentPage"
+                        :page-size="pagination.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="pagination.total">
+                </el-pagination>
+            </div>
+
+            <!-- 添加角色弹出框 -->
+            <div class="add-form">
+                <el-dialog title="添加角色" :visible.sync="dialogFormVisible4Edit">
+                   <el-tree
+                            :data="allPermissions"
+                            show-checkbox
+                            default-expand-all
+                            node-key="id"
+                            ref="tree"
+                            highlight-current
+                            :props="defaultProps">
+                    </el-tree>
+                     <br><br>
+                    <el-form label-position="right" label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="角色名称">
+                                    <el-input v-model="formData.rolename"/>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="角色关键字">
+                                    <el-input v-model="formData.keyword"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="角色描述">
+                                    <el-input v-model="formData.description"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible4Edit = false">取 消</el-button>
+                        <el-button type="primary" @click="addRolePermissions()">确 定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+            <!-- 弹出编辑角色框 -->
+            <div class="add-form">
+                <el-dialog title="编辑角色" :visible.sync="dialogTreeVisibleEdit">
+                    <el-tree
+                            :data="allPermissions"
+                            show-checkbox
+                            default-expand-all
+                            node-key="id"
+                            ref="edittree"
+                            highlight-current
+                            :props="defaultProps">
+                    </el-tree>
+                    <br><br>
+                    <el-form label-position="right" label-width="100px">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="角色名称">
+                                    <el-input v-model="formData.rolename"/>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item label="角色关键字">
+                                    <el-input v-model="formData.keyword"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="角色描述">
+                                    <el-input v-model="formData.description"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogTreeVisibleEdit = false">取 消</el-button>
+                        <el-button type="primary" @click="setRolePermissions()">确 定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+     var  vue = new Vue({
+         el:"#app",
+         data:{
+             pagination:{
+                 currentPage: 1,  //当前页
+                 pageSize: 2,     //每页展示的条数
+                 total: 0,       //总条数据
+                 queryString:'',  //查询条件
+                 pageSizes: [2,4,6,8,10]
+             },
+             dataList:[], //遍历角色集合
+             dialogFormVisible4Edit: false, //添加角色弹框
+             dialogTreeVisibleEdit: false, //编辑角色弹框
+             formData:{},
+             allPermissions:[],
+             checkedMenuIds:[],
+             defaultProps: {
+                 children: 'children',
+                 label: 'name'
+             }
+         },
+         created(){
+            this.findPage();
+         },
+         methods:{
+             findPage(){
+                 var param={
+                     currentPage: this.pagination.currentPage,
+                     pageSize: this.pagination.pageSize,
+                     queryString: this.pagination.queryString
+                 }
+                 axios.post('/role/findPage',param).then((resp)=>{
+                     this.pagination.total =  resp.data.total;
+                     this.dataList = resp.data.rows;
+                     console.log(this.dataList)
+                 })
+             },
+             //切换页码
+             handleCurrentChange(currentPage){
+                 this.pagination.currentPage = currentPage;
+                 this.findPage();
+             },
+             //点击添加角色按钮弹出方法
+             handleCreate(){
+                 this.dialogFormVisible4Edit = true;
+                 this.formData = {},
+                 //异步发送请求 获取菜单数据展示树结构
+                 axios.post('/menu/showAllMenu').then((resp)=>{
+                     this.allPermissions =  resp.data.data;
+                 });
+                 //清空树的选中
+                 this.$refs.tree.setCheckedKeys([]);
+             },
+             //添加角色信息
+             addRolePermissions(){
+                 //获取选中节点的值
+                 let  perId =  this.$refs.tree.getCheckedKeys();
+                //获取半选中节点值
+                 let  parId = this.$refs.tree.getHalfCheckedKeys();
+                 let  checkId = parId.concat(perId);
+                 axios.post('/role/addRoleInfo?ids='+checkId,this.formData).then((resp)=>{
+                      if (resp.data.code==200){
+                          this.$message({
+                              message: '添加角色成功',
+                              type: 'success'
+                          });
+                      }
+                      //关闭添加角色窗口
+                      this.dialogFormVisible4Edit = false;
+                      //刷新数据
+                      this.findPage();
+                 });
+             },
+             //点击编辑角色按钮弹出方法
+             editRole(row){
+                 this.dialogTreeVisibleEdit = true;
+                 this.formData = {};
+                 this.checkedMenuIds=[];
+                 //将全部的树结构展示
+                 axios.post('/menu/showAllMenu').then((resp)=>{
+                     this.allPermissions =  resp.data.data;
+                     //展示角色信息和该角色对应的菜单信息
+                     axios.post('/role/getRoleAndRoleMenu?roleid='+row.roleid).then((resp)=>{
+                           //默认勾选该角色已经拥有的菜单
+                           this.checkedMenuIds = resp.data.data.ckid;
+                           if (this.checkedMenuIds.length > 0){
+                               this.$refs.edittree.setCheckedKeys(this.checkedMenuIds);
+                           }
+                         //将角色对象信息赋值给表单数据对象
+                         this.formData = resp.data.data.role;
+                     });
+                 });
+             },
+             //提交编辑按钮完成数据编辑
+             setRolePermissions(){
+                 //获取选中节点的值
+                 let  perId =  this.$refs.edittree.getCheckedKeys();
+                 //获取半选中节点值
+                 let  parId = this.$refs.edittree.getHalfCheckedKeys();
+                 let  checkId = parId.concat(perId);
+                 axios.post('/role/addRoleInfo?ids='+checkId,this.formData).then((resp)=>{
+                     if (resp.data.code==200){
+                         this.$message({
+                             message: '编辑角色成功',
+                             type: 'success'
+                         });
+                     }
+                     //关闭添加角色窗口
+                     this.dialogTreeVisibleEdit = false;
+                     //刷新数据
+                     this.findPage();
+                 });
+             }
+         }
+     });
+</script>
+</html>

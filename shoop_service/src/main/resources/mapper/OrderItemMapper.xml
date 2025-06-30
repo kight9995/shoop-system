@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxst.shoop.mapper.OrderItemMapper">
+
+    <insert id="saveOrderItem">
+        insert into t_order_item (oid,pid,title,image,price,num,created_user,created_time,modified_user,modified_time)
+         values(#{oid},#{pid},#{title},#{image},#{price},#{num},#{createdUser},#{createdTime},#{modifiedUser},#{modifiedTime})
+    </insert>
+
+    <select id="showItemByOid" resultType="com.zxst.shoop.entity.OrderItem">
+         select * from  t_order_item where oid=#{oid}
+    </select>
+
+    <delete id="deleteInfoByOid">
+        delete from t_order_item where oid=#{oid}
+    </delete>
+
+    <select id="getCountByPid" resultType="java.lang.Integer">
+        select sum(num) from  t_order_item where pid = #{pid}
+    </select>
+</mapper>
